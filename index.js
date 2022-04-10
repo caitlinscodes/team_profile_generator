@@ -54,45 +54,38 @@ inquirer
       name: 'questions2',
     },
   ])
-// TODO: Create a function to write README file
+// TODO: Create a function to write HTML file
   .then((response) => {
-    fs.writeFile('README2.md',
+    fs.writeFile('index.html',
       `
-      # ${response.projectTitle}
-      
-      ## Description
-      ${response.description}
-      
-      ## Table of Contents
-      * Installation
-      * Usage
-      * License
-      * Contributing
-      * Tests
-      * Questions
-      
-      ## Installation
-      ${response.installation}
-      
-      ## Usage
-      ${response.usage}
-      
-      ## License
-      ${response.license}
-      
-      ## Contributing
-      ${response.contributors}
-      
-      ## Tests
-      ${response.tests}
-      
-      ## Questions
-      For any questions please refer to my GitHub Account:
-      https://github.com/${response.questions1}
-      or email me at:
-      ${response.questions2}
-      ---
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Document</title>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+      </head>
+      <body class="bg-gradient-light">
+          <div class="jumbotron jumbotron-fluid bg-info text-white">
+              <div class="container">
+                <h1 class="display-4">
+                  Hi, my name is ${response.name}!
+                </h1>
+                <p class="lead">I am from ${response.location}.</p>
+                <h2>Bio:</h2>
+                <p class="lead">${response.bio}</p>
+                <p class="lead"><b>Let's Connect:</b></p>
+                <ul>
+                  <li class="lead"><a href="${response.linkedin}">${response.linkedin}</a><!--LinkdIn URL--></li>
+                  <li class="lead"><a href="${response.github}">${response.github}</a><!--GitHub URL--></li>
+                </ul>
+              </div>
+            </div>
+      </body>
+      </html>
         `, (err) =>
-        err ? console.error(err) : console.log('README file created')
+        err ? console.error(err) : console.log('HTML file created')
       );
  });
