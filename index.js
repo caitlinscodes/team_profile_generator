@@ -7,200 +7,44 @@ inquirer
   .prompt([
     {
       type: 'input',
-      message: 'What is the title of your project?',
-      name: 'projectTitle',
+      message: 'What is the new employee name?',
+      name: 'employeeName',
     },
     {
       type: 'input',
-      message: 'Give a brief description of your project.',
-      name: 'description',
+      message: 'What is the new employee ID?',
+      name: 'employeeID',
     },
     {
       type: 'input',
-      message: 'Describe the installation process for this project.',
-      name: 'installation',
-    },
-    {
-      type: 'input',
-      message: 'Describe the usage information for this program.',
-      name: 'usage',
+      message: 'What is the new employee email?',
+      name: 'employeeEmail',
     },
     {
       type: 'list',
-      message: 'Select a license:',
-      name: 'license',
-      choices: ['MIT: Gives users express permissioon to reuse code for any purpose.', 
-      'GNU: A series of software licenses that guarantee end users the freedom to run, study, share and modify the software.', 
-      'Apache License 2.0: Allows commercial use, alterations, and distribution of updated/altered versions of the code.'],
+      message: 'Select an employee type:',
+      name: 'employeeType',
+      choices: ['Manager', 'Engineer', 'Intern'],
+    },
+    //Figure out if statements for below questions.
+    {
+      type: 'input',
+      message: 'Please enter the new manager office number.',
+      name: 'managerOffice',
     },
     {
       type: 'input',
-      message: 'Please list all project contributors. (If none, please type "none")',
-      name: 'contributors',
+      message: 'What is the new engineer GitHub username?',
+      name: 'engineerGitHub',
     },
     {
       type: 'input',
-      message: 'Describe any project testing information.',
-      name: 'tests',
-    },
-    {
-      type: 'input',
-      message: 'What is your GitHub profile name?',
-      name: 'questions1',
-    },
-    {
-      type: 'input',
-      message: 'What is your email address?',
-      name: 'questions2',
+      message: 'What is the new intern school?',
+      name: 'internSchool',
     },
   ])
 // TODO: Create a function to write HTML and CSS files
   .then((response) => {
-    fs.writeFile('style.css',
-    `
-    :root {
-      --hf: #68a691;
-      --box: #bfd3c1;
-      --bg: #ffe5d4;
-      --txt: #efc7c2;
-    }
-    
-    body {
-      font-family: optima;
-      font-size: 20px;
-      background-color: var(--bg);
-      padding: 10px;
-    }
-    
-    h1, h2 {
-      font-family: optima;
-    }
-    
-    /* Header */
-    header {
-      background-color: var(--hf);
-      display: flex;
-      padding: 20px;
-    }
-    
-    header img {
-      border-radius: 15px;
-      position: relative;
-    }
-    
-    .header-info {
-      width: 100%;
-      text-align: center;
-    }
-    
-    header h1 {
-      text-align: center;
-    }
-    
-    nav ul {
-      list-style-type: none;
-    }
-    
-    /* Pulled from pseudo classes assignment */
-     div.samples ul {
-      display: none;
-    }
-    
-    div.samples:hover {
-      cursor: pointer;
-    }
-    
-    div.samples:hover ul {
-      display: block;
-    }
-    
-    /* Main Body */
-    .flex-container {
-      display: flex;
-    }
-    
-    main {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      margin: 20px;
-    }
-    
-    section {
-      position: relative;
-      background-color: var(--box);
-      border: 3px solid var(--hf);
-      margin-bottom: 10px;
-      padding: 20px;
-      width: 95%;
-    }
-    
-    section.design, section.back-end {
-      text-align: right;
-    }
-    
-    section.design img, section.back-end img {
-      border-radius: 15px;
-      display: inline-block;
-      margin: 20px;
-      position: relative;
-      float: left;
-    }
-    
-    section.front-end {
-      text-align: left;
-    }
-    
-    section.front-end img {
-      border-radius: 15px;
-      display: inline-block;
-      margin: 20px;
-      position: relative;
-      float: right;
-    }
-    
-    /* Aside Body */
-    aside {
-      flex: 1 1 auto;
-      background-color: var(--box);
-      border: 3px solid var(--hf);
-      text-align: center;
-      padding: 20px;
-      margin: 20px;
-      width: 25%;
-      height: 100%;
-    }
-    
-    aside img {
-      border-radius: 15px;
-    }
-    
-    aside ul li {
-      display: block;
-    }
-    
-    /* Footer */
-    footer {
-      padding: 50px;
-      width: 100%;
-      display: block;
-      background-color: var(--hf);
-      text-align: center;
-    }
-    
-    footer img {
-      border-radius: 15px;
-    }
-    
-    /* MediaQuery */
-    @media screen and (max-width: 768px) {
-      aside {
-        display: none;
-      }
-    }
-      `, (err) =>
-      err ? console.error(err) : console.log('CSS file created')
-    );
     fs.writeFile('index.html',
       `
       <!DOCTYPE html>
@@ -217,16 +61,22 @@ inquirer
           <div class="jumbotron jumbotron-fluid bg-info text-white">
               <div class="container">
                 <h1 class="display-4">
-                  Hi, my name is ${response.name}!
+                  Team Profile
                 </h1>
-                <p class="lead">I am from ${response.location}.</p>
-                <h2>Bio:</h2>
-                <p class="lead">${response.bio}</p>
-                <p class="lead"><b>Let's Connect:</b></p>
-                <ul>
-                  <li class="lead"><a href="${response.linkedin}">${response.linkedin}</a><!--LinkdIn URL--></li>
-                  <li class="lead"><a href="${response.github}">${response.github}</a><!--GitHub URL--></li>
-                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">${response.employeeName}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">${response.employeeType}</h6>
+                  <p class="card-text">ID: ${response.employeeID}</p>
+                  <p class="card-text">Office #: ${response.managerOffice}</p>
+                  <p class="card-text">School: ${response.internSchool}</p>
+                  <a href="${response.employeeEmail}" class="card-link">${response.employeeEmail}</a>
+                  <a href="${response.engineerGitHub}" class="card-link">${response.engineerGitHub}</a>
+                </div>
               </div>
             </div>
       </body>
