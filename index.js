@@ -35,9 +35,77 @@ const promptNewEmployee = () => {
       name: 'employeeType',
       choices: ['Manager', 'Engineer', 'Intern'],
     },
-  ])
+  ]).then(userChoice => {
+    switch (userChoice.employeeType) {
+      case 'Manager': promptManager();
+      case 'Engineer': promptEngineer();
+      case 'Intern': promptIntern();
+    }
+  })
 }
 
+const promptManager = () => {
+  return inquirer.prompt ([
+    {
+      type: 'input',
+      message: 'Please enter the new manager office number.',
+      name: 'managerOffice',
+    },
+    {
+      type: 'list',
+      message: 'Would you like to add another team member?',
+      name: 'addMoreEmployees',
+      choices: ['yes', 'no'],
+    },
+  ]).then(userChoice => {
+    switch (userChoice.addMoreEmployees) {
+      case 'yes': promptNewEmployee();
+      case 'no': generateSite;
+    }
+  })
+}
+
+const promptEngineer = () => {
+  return inquirer.prompt ([
+    {
+      type: 'input',
+      message: 'What is the new engineer GitHub URL?',
+      name: 'engineerGitHub',
+    },
+    {
+      type: 'list',
+      message: 'Would you like to add another team member?',
+      name: 'addMoreEmployees',
+      choices: ['yes', 'no'],
+    },
+  ]).then(userChoice => {
+    switch (userChoice.addMoreEmployees) {
+      case 'yes': promptNewEmployee();
+      case 'no': generateSite;
+    }
+  })
+}
+
+const promptIntern = () => {
+  return inquirer.prompt ([
+    {
+      type: 'input',
+      message: 'What is the new intern school?',
+      name: 'internSchool',
+    },
+    {
+      type: 'list',
+      message: 'Would you like to add another team member?',
+      name: 'addMoreEmployees',
+      choices: ['yes', 'no'],
+    },
+  ]).then(userChoice => {
+    switch (userChoice.addMoreEmployees) {
+      case 'yes': promptNewEmployee();
+      case 'no': generateSite;
+    }
+  })
+}
 
 
 
