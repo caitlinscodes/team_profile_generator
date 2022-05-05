@@ -1,8 +1,47 @@
 // TODO: Include packages needed for this application
 const inquirer = require('inquirer');
+const Employee = require('./lib/Employee');
+const Manager = require('./lib/Manager');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
+const generateSite = require('./src/generate-site.js');
 const fs = require('fs');
+const path = require('path');
+const OUTPUT_DIR = path.resolve(_dirname, 'output');
+const outputPath = path.join(OUTPUT_DIR, 'index.html');
+const teamMembers = [];
 
 // TODO: Create an array of questions for user input
+const promptNewEmployee = () => {
+  return inquirer.prompt ([
+    {
+      type: 'input',
+      message: 'What is the new employee name?',
+      name: 'employeeName',
+    },
+    {
+      type: 'input',
+      message: 'What is the new employee Id?',
+      name: 'employeeId',
+    },
+    {
+      type: 'input',
+      message: 'What is the new employee email?',
+      name: 'employeeEmail',
+    },
+    {
+      type: 'list',
+      message: 'Select an employee type:',
+      name: 'employeeType',
+      choices: ['Manager', 'Engineer', 'Intern'],
+    },
+  ])
+}
+
+
+
+
+//Start of old code
 inquirer
   .prompt([
     {
