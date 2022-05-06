@@ -4,15 +4,34 @@ const Employee = require('./lib/Employee');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
-const generateSite = require('./src/generate-site.js');
+// const generateSite = require('./src/generate-site.js');
 const fs = require('fs');
-const path = require('path');
-const OUTPUT_DIR = path.resolve(_dirname, 'output');
-const outputPath = path.join(OUTPUT_DIR, 'index.html');
-const teamMembers = [];
+// const path = require('path');
+// const OUTPUT_DIR = path.resolve(_dirname, 'output');
+// const outputPath = path.join(OUTPUT_DIR, 'index.html');
+// const teamMembers = [];
 
 // TODO: Create an array of questions for user input
 const promptNewEmployee = () => {
+  return inquirer.prompt ([
+    {
+      type: 'list',
+      message: 'Select an employee type:',
+      name: 'employeeType',
+      choices: ['Manager', 'Engineer', 'Intern'],
+    },
+  ]).then(userChoice => {
+    switch (userChoice.employeeType) {
+      case 'Manager': promptManager();
+      break;
+      case 'Engineer': promptEngineer();
+      break;
+      case 'Intern': promptIntern();
+    }
+  })
+}
+
+const promptManager = () => {
   return inquirer.prompt ([
     {
       type: 'input',
@@ -30,23 +49,6 @@ const promptNewEmployee = () => {
       name: 'employeeEmail',
     },
     {
-      type: 'list',
-      message: 'Select an employee type:',
-      name: 'employeeType',
-      choices: ['Manager', 'Engineer', 'Intern'],
-    },
-  ]).then(userChoice => {
-    switch (userChoice.employeeType) {
-      case 'Manager': promptManager();
-      case 'Engineer': promptEngineer();
-      case 'Intern': promptIntern();
-    }
-  })
-}
-
-const promptManager = () => {
-  return inquirer.prompt ([
-    {
       type: 'input',
       message: 'Please enter the new manager office number.',
       name: 'managerOffice',
@@ -60,13 +62,29 @@ const promptManager = () => {
   ]).then(userChoice => {
     switch (userChoice.addMoreEmployees) {
       case 'yes': promptNewEmployee();
-      case 'no': generateSite;
+      break;
+      case 'no': generateSite();
     }
   })
 }
 
 const promptEngineer = () => {
   return inquirer.prompt ([
+    {
+      type: 'input',
+      message: 'What is the new employee name?',
+      name: 'employeeName',
+    },
+    {
+      type: 'input',
+      message: 'What is the new employee Id?',
+      name: 'employeeId',
+    },
+    {
+      type: 'input',
+      message: 'What is the new employee email?',
+      name: 'employeeEmail',
+    },
     {
       type: 'input',
       message: 'What is the new engineer GitHub URL?',
@@ -81,7 +99,8 @@ const promptEngineer = () => {
   ]).then(userChoice => {
     switch (userChoice.addMoreEmployees) {
       case 'yes': promptNewEmployee();
-      case 'no': generateSite;
+      break;
+      case 'no': generateSite();
     }
   })
 }
@@ -90,36 +109,12 @@ const promptIntern = () => {
   return inquirer.prompt ([
     {
       type: 'input',
-      message: 'What is the new intern school?',
-      name: 'internSchool',
-    },
-    {
-      type: 'list',
-      message: 'Would you like to add another team member?',
-      name: 'addMoreEmployees',
-      choices: ['yes', 'no'],
-    },
-  ]).then(userChoice => {
-    switch (userChoice.addMoreEmployees) {
-      case 'yes': promptNewEmployee();
-      case 'no': generateSite;
-    }
-  })
-}
-
-
-
-//Start of old code
-inquirer
-  .prompt([
-    {
-      type: 'input',
       message: 'What is the new employee name?',
       name: 'employeeName',
     },
     {
       type: 'input',
-      message: 'What is the new employee ID?',
+      message: 'What is the new employee Id?',
       name: 'employeeID',
     },
     {
@@ -128,30 +123,32 @@ inquirer
       name: 'employeeEmail',
     },
     {
-      type: 'list',
-      message: 'Select an employee type:',
-      name: 'employeeType',
-      choices: ['Manager', 'Engineer', 'Intern'],
-    },
-    //Figure out if statements for below questions.
-    {
-      type: 'input',
-      message: 'Please enter the new manager office number.',
-      name: 'managerOffice',
-    },
-    {
-      type: 'input',
-      message: 'What is the new engineer GitHub username?',
-      name: 'engineerGitHub',
-    },
-    {
       type: 'input',
       message: 'What is the new intern school?',
       name: 'internSchool',
     },
-  ])
-// TODO: Create a function to write HTML and CSS files
-  .then((response) => {
+  ]).then(response => {
+    const intern = new Intern(response.employeeType, response.name, response.employeeID, response.employeeEmail, response.internSchool);
+    teamMembers.push(intern);
+  }).then(
+    //Need to figure out how to prompt this next section...maybe turn it into a separate prompt fuction and call it above?
+    {
+      type: 'list',
+      message: 'Would you like to add another team member?',
+      name: 'addMoreEmployees',
+      choices: ['yes', 'no'],
+    },
+  ).then(userChoice => {
+    switch (userChoice.addMoreEmployees) {
+      case 'yes': promptNewEmployee();
+      break;
+      case 'no': generateSite();
+    }
+  })
+}
+
+
+const generateSite = (response) => {
     fs.writeFile('index.html',
       `
       <!DOCTYPE html>
@@ -191,4 +188,6 @@ inquirer
         `, (err) =>
         err ? console.error(err) : console.log('HTML file created')
       );
- });
+  };
+
+  promptNewEmployee()
