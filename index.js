@@ -1,154 +1,111 @@
-// TODO: Include packages needed for this application
+// Global Requirements
 const inquirer = require('inquirer');
-const Employee = require('./lib/Employee');
+const jest = require('jest');
+
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
-// const generateSite = require('./src/generate-site.js');
+
 const fs = require('fs');
-// const path = require('path');
-// const OUTPUT_DIR = path.resolve(_dirname, 'output');
-// const outputPath = path.join(OUTPUT_DIR, 'index.html');
-// const teamMembers = [];
 
-// TODO: Create an array of questions for user input
-const promptNewEmployee = () => {
+const managers = [];
+const engineers = [];
+const interns = [];
+
+// New Team Member Prompts
+const promptNewManager = () => {
   return inquirer.prompt ([
     {
-      type: 'list',
-      message: 'Select an employee type:',
-      name: 'employeeType',
-      choices: ['Manager', 'Engineer', 'Intern'],
+      type: 'input',
+      message: 'What is the new manager name?',
+      name: 'name',
     },
-  ]).then(userChoice => {
-    switch (userChoice.employeeType) {
-      case 'Manager': promptManager();
-      break;
-      case 'Engineer': promptEngineer();
-      break;
-      case 'Intern': promptIntern();
-    }
+    {
+      type: 'input',
+      message: 'What is the new manager Id?',
+      name: 'id',
+    },
+    {
+      type: 'input',
+      message: 'What is the new manager email?',
+      name: 'email',
+    },
+    {
+      type: 'input',
+      message: 'What is the new manager office number?',
+      name: 'officeNumber',
+    },
+  ]).then(response => {
+    console.log(response);
+    const newManager = new Manager(response.name, response.id, response.email, response.officeNumber)
+    managers.push(newManager);
+    promptNewEngineer();
   })
 }
 
-const promptManager = () => {
+const promptNewEngineer = () => {
   return inquirer.prompt ([
     {
       type: 'input',
-      message: 'What is the new employee name?',
-      name: 'employeeName',
+      message: 'What is the new engineer name?',
+      name: 'name',
     },
     {
       type: 'input',
-      message: 'What is the new employee Id?',
-      name: 'employeeId',
+      message: 'What is the new engineer Id?',
+      name: 'id',
     },
     {
       type: 'input',
-      message: 'What is the new employee email?',
-      name: 'employeeEmail',
+      message: 'What is the new engineer email?',
+      name: 'email',
     },
     {
       type: 'input',
-      message: 'Please enter the new manager office number.',
-      name: 'managerOffice',
+      message: 'What is the new engineer github URL?',
+      name: 'github',
     },
-    {
-      type: 'list',
-      message: 'Would you like to add another team member?',
-      name: 'addMoreEmployees',
-      choices: ['yes', 'no'],
-    },
-  ]).then(userChoice => {
-    switch (userChoice.addMoreEmployees) {
-      case 'yes': promptNewEmployee();
-      break;
-      case 'no': generateSite();
-    }
+  ]).then(response => {
+    console.log(response);
+    const newEngineer = new Engineer(response.name, response.id, response.email, response.github)
+    engineers.push(newEngineer);
+    promptNewIntern();
   })
 }
 
-const promptEngineer = () => {
-  return inquirer.prompt ([
-    {
-      type: 'input',
-      message: 'What is the new employee name?',
-      name: 'employeeName',
-    },
-    {
-      type: 'input',
-      message: 'What is the new employee Id?',
-      name: 'employeeId',
-    },
-    {
-      type: 'input',
-      message: 'What is the new employee email?',
-      name: 'employeeEmail',
-    },
-    {
-      type: 'input',
-      message: 'What is the new engineer GitHub URL?',
-      name: 'engineerGitHub',
-    },
-    {
-      type: 'list',
-      message: 'Would you like to add another team member?',
-      name: 'addMoreEmployees',
-      choices: ['yes', 'no'],
-    },
-  ]).then(userChoice => {
-    switch (userChoice.addMoreEmployees) {
-      case 'yes': promptNewEmployee();
-      break;
-      case 'no': generateSite();
-    }
-  })
-}
 
-const promptIntern = () => {
+const promptNewIntern = () => {
   return inquirer.prompt ([
     {
       type: 'input',
-      message: 'What is the new employee name?',
-      name: 'employeeName',
+      message: 'What is the new inter name?',
+      name: 'name',
     },
     {
       type: 'input',
-      message: 'What is the new employee Id?',
-      name: 'employeeID',
+      message: 'What is the new intern Id?',
+      name: 'id',
     },
     {
       type: 'input',
-      message: 'What is the new employee email?',
-      name: 'employeeEmail',
+      message: 'What is the new intern email?',
+      name: 'email',
     },
     {
       type: 'input',
       message: 'What is the new intern school?',
-      name: 'internSchool',
+      name: 'school',
     },
   ]).then(response => {
-    const intern = new Intern(response.employeeType, response.name, response.employeeID, response.employeeEmail, response.internSchool);
-    teamMembers.push(intern);
-  }).then(
-    //Need to figure out how to prompt this next section...maybe turn it into a separate prompt fuction and call it above?
-    {
-      type: 'list',
-      message: 'Would you like to add another team member?',
-      name: 'addMoreEmployees',
-      choices: ['yes', 'no'],
-    },
-  ).then(userChoice => {
-    switch (userChoice.addMoreEmployees) {
-      case 'yes': promptNewEmployee();
-      break;
-      case 'no': generateSite();
-    }
+    console.log(response);
+    const newIntern = new Intern(response.name, response.id, response.email, response.school)
+    interns.push(newIntern);
+    writeHTML();
   })
 }
 
-
-const generateSite = (response) => {
+// Write HTML file
+const writeHTML = (response) => {
     fs.writeFile('index.html',
       `
       <!DOCTYPE html>
@@ -159,7 +116,6 @@ const generateSite = (response) => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Team Profile Generator</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
-          <link rel="stylesheet" href="/style.css"/>
       </head>
       <body class="bg-gradient-light">
           <div class="jumbotron jumbotron-fluid bg-info text-white">
@@ -173,13 +129,31 @@ const generateSite = (response) => {
               <div class="card" style="width: 18rem;">
                 <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
-                  <h5 class="card-title">${response.employeeName}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">${response.employeeType}</h6>
-                  <p class="card-text">ID: ${response.employeeID}</p>
-                  <p class="card-text">Office #: ${response.managerOffice}</p>
-                  <p class="card-text">School: ${response.internSchool}</p>
-                  <a href="${response.employeeEmail}" class="card-link">${response.employeeEmail}</a>
-                  <a href="${response.engineerGitHub}" class="card-link">${response.engineerGitHub}</a>
+                  <h5 class="card-title">${managers.name}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Manager</h6>
+                  <p class="card-text">ID: ${managers.id}</p>
+                  <p class="card-text">Office #: ${manager.officeNumber}</p>
+                  <a href="mailto:${managers.email}" class="card-link">${managers.email}</a>
+                </div>
+              </div>
+              <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">${engineers.name}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Engineer</h6>
+                  <p class="card-text">ID: ${engineers.id}</p>
+                  <a href="mailto:${engineers.email}" class="card-link">${engineers.email}</a>
+                  <a href="${engineers.github}" class="card-link">${engineers.github}</a>
+                </div>
+              </div>
+              <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">${interns.name}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Intern</h6>
+                  <p class="card-text">ID: ${interns.id}</p>
+                  <p class="card-text">School: ${interns.school}</p>
+                  <a href="mailto:${interns.email}" class="card-link">${interns.email}</a>
                 </div>
               </div>
             </div>
@@ -190,4 +164,4 @@ const generateSite = (response) => {
       );
   };
 
-  promptNewEmployee()
+  promptNewManager()
